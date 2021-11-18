@@ -5,6 +5,10 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [isAddingUser, setIsAddingUser] = useState(false);
+  const [formName, setFormName] = useState("");
+  const [formUsername, setFormUsername] = useState("");
+  const [formEmail, setFormEmail] = useState("");
 
   const backendUrl = "https://live-user-manager-backend.herokuapp.com/";
 
@@ -50,11 +54,104 @@ function App() {
     loadUsers();
   };
 
+  const handleToggleAddUserArea = () => {
+    setIsAddingUser(!isAddingUser);
+  };
+
+  const clearForm = () => {
+    setFormName("");
+    setFormUsername("");
+    setFormEmail("");
+  };
+  const handleFormSaveButton = (e) => {
+    e.preventDefault();
+    (async () => {
+      await fetch(`${backendUrl}/adduser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: {
+            name: formName,
+            username: formUsername,
+            email: formEmail,
+          },
+        }),
+      });
+      clearForm();
+      setIsAddingUser(false);
+      loadUsers();
+    })();
+  };
+
+  const handleFormName = (e) => {
+    setFormName(e.target.value);
+  };
+
+  const handleFormUsername = (e) => {
+    setFormUsername(e.target.value);
+  };
+
+  const handleFormEmail = (e) => {
+    setFormEmail(e.target.value);
+  };
+
+  const handleCancelAddForm = (e) => {
+		e.preventDefault();
+		clearForm();
+		setIsAddingUser(!isAddingUser);
+	}
+
   return (
     <div className="App">
       <h1>User Management App</h1>
       <div className="topRow">
-        <button>Add User</button>
+        <div className="addUserArea">
+          <div>
+            <button onClick={handleToggleAddUserArea}>Add User</button>
+          </div>
+          {isAddingUser && (
+            <div className="addUserFormArea">
+              <form>
+                <div className="row">
+                  <label htmlFor="name">Full Name: </label>
+                  <input
+                    type="text"
+                    value={formName}
+                    onChange={handleFormName}
+                    id="name"
+                  />
+                </div>
+
+                <div className="row">
+                  <label htmlFor="username">User Name: </label>
+                  <input
+                    type="text"
+                    value={formUsername}
+                    onChange={handleFormUsername}
+                    id="username"
+                  />
+                </div>
+
+                <div className="row">
+                  <label htmlFor="email">Email: </label>
+                  <input
+                    type="text"
+                    value={formEmail}
+                    onChange={handleFormEmail}
+                    id="email"
+                  />
+                </div>
+
+                <div className="formButtonArea">
+                  <button onClick={(e) => handleFormSaveButton(e)}>
+                    Save New User
+                  </button>
+                  <button onClick={handleCancelAddForm}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
       <section className="users">
         {users.map((user, index) => {
