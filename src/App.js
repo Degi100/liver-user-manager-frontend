@@ -105,7 +105,6 @@ function App() {
     <div className="App">
       <h1>User Management App!!</h1>
       <div>
-        
       </div>
       <div className="topRow">
         <div className="addUserArea">
