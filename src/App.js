@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import "./App.scss";
 import { GrEdit } from "react-icons/gr";
@@ -104,6 +105,7 @@ function App() {
   return (
     <div className="App">
       <h1>User Management App!!</h1>
+      <h2>{users.length}Users</h2>
       <div>
       </div>
       <div className="topRow">
